@@ -10,7 +10,7 @@ CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "").strip()
 CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "").strip()
 BASE_URL = "https://api.prod.whoop.com/developer"
 TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"
-TOKENS_FILE = os.path.join(os.path.dirname(__file__), "tokens.json")
+TOKENS_FILE = os.getenv("TOKENS_PATH", os.path.join(os.path.dirname(__file__), "tokens.json"))
 
 class WhoopClient:
     def __init__(self, tokens_path=TOKENS_FILE):

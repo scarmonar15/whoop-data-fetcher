@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DEFAULT_DB_PATH = os.path.join(os.path.dirname(__file__), 'whoop_data.db')
+DEFAULT_DB_PATH = os.getenv("DATABASE_PATH", os.path.join(os.path.dirname(__file__), 'whoop_data.db'))
 
 def get_connection(db_path=DEFAULT_DB_PATH):
     conn = sqlite3.connect(db_path)

@@ -173,9 +173,31 @@ def trigger_sync():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+def daily_sync_loop():
+    import time
+    # Sleep 30s initially to let the server startup fully
+    time.sleep(30)
+    while True:
+        try:
+            print("[*] Running scheduled daily sync...")
+            from fetch import run_pull
+            run_pull()
+            print("[+] Scheduled daily sync completed successfully.")
+        except Exception as e:
+            print(f"[-] Scheduled sync error: {e}")
+        # Sleep for 24 hours
+        time.sleep(86400)
+
 def main():
     # Make sure DB exists
     db.init_db()
+    
+    # Start background daily sync thread (prevent double-start in Flask debug mode)
+    import threading
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
+        threading.Thread(target=daily_sync_loop, daemon=True).start()
+        print("[*] Started background daily sync thread.")
+        
     print(f"[*] Starting local server on http://localhost:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=True)
 
