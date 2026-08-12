@@ -140,24 +140,24 @@
                     </div>
                 </div>
 
-                <!-- Workouts Card -->
-                <div class="metric-card workout-card">
+                <!-- Body Profile Card -->
+                <div class="metric-card profile-card">
                     <div class="card-header">
-                        <span class="card-title">Workouts</span>
-                        <div class="card-icon workout"><i data-lucide="dumbbell"></i></div>
+                        <span class="card-title">Body Profile</span>
+                        <div class="card-icon profile"><i data-lucide="user"></i></div>
                     </div>
                     <div class="card-value-container">
-                        <span class="card-value" id="valWorkouts">--</span>
-                        <span class="card-change">This Period</span>
+                        <span class="card-value" id="valWeight">-- kg</span>
+                        <span class="card-change">Current Weight</span>
                     </div>
                     <div class="card-sub-metrics">
                         <div class="sub-metric">
-                            <span class="sub-label">Body Weight</span>
-                            <span class="sub-val" id="valWeight">-- kg</span>
-                        </div>
-                        <div class="sub-metric">
                             <span class="sub-label">Height</span>
                             <span class="sub-val" id="valHeight">-- m</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span class="sub-label">Max HR</span>
+                            <span class="sub-val" id="valMaxHRProfile">-- bpm</span>
                         </div>
                     </div>
                 </div>
@@ -196,34 +196,6 @@
                     <div class="chart-wrapper">
                         <canvas id="sleepChart"></canvas>
                     </div>
-                </div>
-            </section>
-
-            <!-- Workouts List Table -->
-            <section class="workouts-table-card">
-                <div class="table-header">
-                    <h3>Recent Workouts & Activities</h3>
-                    <p class="chart-subtitle">Detailed breakdown of training sessions</p>
-                </div>
-                <div class="table-wrapper">
-                    <table class="workouts-table">
-                        <thead>
-                            <tr>
-                                <th>Date & Time</th>
-                                <th>Sport / Activity</th>
-                                <th>Strain</th>
-                                <th>Avg Heart Rate</th>
-                                <th>Max Heart Rate</th>
-                                <th>Energy Burned</th>
-                                <th>Distance</th>
-                            </tr>
-                        </thead>
-                        <tbody id="workoutsTableBody">
-                            <tr>
-                                <td colspan="7" class="empty-table-row">No workout data synced yet. Run a sync or authorize your account.</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </section>
         </main>

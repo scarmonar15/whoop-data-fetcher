@@ -54,9 +54,10 @@ async function loadUserProfile() {
         const initials = `${profile.first_name[0] || ''}${profile.last_name[0] || ''}`.toUpperCase();
         document.getElementById('userAvatar').textContent = initials || 'WU';
         
-        // Height & Weight sub-metrics in workouts card
+        // Height & Weight sub-metrics in profile card
         document.getElementById('valWeight').textContent = profile.weight_kg ? `${profile.weight_kg.toFixed(1)} kg` : '--';
         document.getElementById('valHeight').textContent = profile.height_meter ? `${profile.height_meter.toFixed(2)} m` : '--';
+        document.getElementById('valMaxHRProfile').textContent = profile.max_heart_rate ? `${profile.max_heart_rate} bpm` : '--';
     } catch (err) {
         console.error('Error loading profile:', err);
     }
@@ -66,17 +67,15 @@ async function updateDashboardData() {
     showToast(`Loading last ${currentDays} days...`);
     try {
         // Fetch data concurrently
-        const [summary, recovery, sleeps, cycles, workouts] = await Promise.all([
+        const [summary, recovery, sleeps, cycles] = await Promise.all([
             fetch(`/api/summary?days=${currentDays}`).then(res => res.json()),
             fetch(`/api/recovery?days=${currentDays}`).then(res => res.json()),
             fetch(`/api/sleeps?days=${currentDays}`).then(res => res.json()),
-            fetch(`/api/cycles?days=${currentDays}`).then(res => res.json()),
-            fetch(`/api/workouts?days=${currentDays}`).then(res => res.json())
+            fetch(`/api/cycles?days=${currentDays}`).then(res => res.json())
         ]);
 
         renderSummaryCards(summary, recovery, sleeps, cycles);
         renderCharts(recovery, sleeps, cycles);
-        renderWorkoutsTable(workouts);
         hideToast();
     } catch (err) {
         console.error('Error loading dashboard data:', err);
@@ -142,8 +141,7 @@ function renderSummaryCards(summary, recoveryList, sleepsList, cyclesList) {
         document.getElementById('valCalories').textContent = '--';
     }
 
-    // 4. Workouts Count
-    document.getElementById('valWorkouts').textContent = summary.workouts_count !== undefined ? summary.workouts_count : '--';
+
 }
 
 function calculateRollingAverage(data, windowSize) {
@@ -401,47 +399,7 @@ function renderCharts(recoveryList, sleepsList, cyclesList) {
     });
 }
 
-function renderWorkoutsTable(workouts) {
-    const tableBody = document.getElementById('workoutsTableBody');
-    if (!workouts || workouts.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="empty-table-row">No workout data found in this period.</td>
-            </tr>
-        `;
-        return;
-    }
 
-    // Sort workouts descending (newest first)
-    workouts.sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
-
-    tableBody.innerHTML = workouts.map(w => {
-        const dateObj = new Date(w.start_time);
-        const formattedDate = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        const formattedTime = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-        
-        // Convert sport ID to text (Common WHOOP sports)
-        const sportName = getSportName(w.sport_id);
-
-        const strainVal = w.strain ? w.strain.toFixed(1) : '--';
-        const avgHr = w.average_heart_rate ? `${w.average_heart_rate} bpm` : '--';
-        const maxHr = w.max_heart_rate ? `${w.max_heart_rate} bpm` : '--';
-        const cals = w.kilocalories ? `${Math.round(w.kilocalories)} kcal` : '--';
-        const dist = w.distance_meter ? `${(w.distance_meter / 1000).toFixed(2)} km` : '--';
-
-        return `
-            <tr>
-                <td><strong>${formattedDate}</strong><br><span style="font-size: 11px; color: var(--text-secondary);">${formattedTime}</span></td>
-                <td><span class="sport-badge">${sportName}</span></td>
-                <td><span style="color: var(--accent-strain); font-weight: 600;">${strainVal}</span></td>
-                <td>${avgHr}</td>
-                <td>${maxHr}</td>
-                <td>${cals}</td>
-                <td>${dist}</td>
-            </tr>
-        `;
-    }).join('');
-}
 
 // Helpers
 function formatDate(dateString) {
