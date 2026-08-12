@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.santiagocarmona.whoopdashboard</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/santiagocarmona/dev/whoop-data-fetcher/venv/bin/python3</string>
+        <string>/Users/santiagocarmona/dev/whoop-data-fetcher/server.py</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/santiagocarmona/dev/whoop-data-fetcher</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/santiagocarmona/dev/whoop-data-fetcher/server_stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/santiagocarmona/dev/whoop-data-fetcher/server_stderr.log</string>
+</dict>
+</plist>
