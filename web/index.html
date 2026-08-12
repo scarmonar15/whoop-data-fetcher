@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHOOP Performance Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">WHOOP</span>
+            </div>
+            
+            <div class="user-profile" id="userProfile">
+                <div class="avatar" id="userAvatar">WU</div>
+                <div class="user-info">
+                    <h3 class="user-name" id="userName">WHOOP User</h3>
+                    <p class="user-email" id="userEmail">user@whoop.com</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <i data-lucide="layout-dashboard"></i> Overview
+                </a>
+                <a href="#" class="nav-item" data-section="sleep">
+                    <i data-lucide="moon"></i> Sleep Analysis
+                </a>
+                <a href="#" class="nav-item" data-section="recovery">
+                    <i data-lucide="activity"></i> Recovery & HRV
+                </a>
+                <a href="#" class="nav-item" data-section="workouts">
+                    <i data-lucide="dumbbell"></i> Workouts
+                </a>
+            </nav>
+
+            <div class="sync-status-container">
+                <div class="sync-status">
+                    <div class="status-indicator online"></div>
+                    <span>System Active</span>
+                </div>
+                <button class="sync-btn" id="syncBtn">
+                    <i data-lucide="refresh-cw"></i> Sync New Data
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">
+                    <h1>Performance Dashboard</h1>
+                    <p class="subtitle">Detailed physiological insights and training metrics</p>
+                </div>
+                <div class="time-filter">
+                    <button class="filter-btn" data-days="7">7D</button>
+                    <button class="filter-btn active" data-days="30">30D</button>
+                    <button class="filter-btn" data-days="90">90D</button>
+                </div>
+            </header>
+
+            <!-- Metrics Overview Cards -->
+            <section class="metrics-grid">
+                <!-- Recovery Card -->
+                <div class="metric-card recovery-card">
+                    <div class="card-header">
+                        <span class="card-title">Recovery Score</span>
+                        <div class="card-icon recovery"><i data-lucide="heart-pulse"></i></div>
+                    </div>
+                    <div class="card-value-container">
+                        <span class="card-value" id="valRecovery">--%</span>
+                        <span class="card-change" id="labelRecoveryState">Calibrating</span>
+                    </div>
+                    <div class="card-sub-metrics">
+                        <div class="sub-metric">
+                            <span class="sub-label">HRV</span>
+                            <span class="sub-val" id="valHRV">-- ms</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span class="sub-label">Resting HR</span>
+                            <span class="sub-val" id="valRHR">-- bpm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sleep Card -->
+                <div class="metric-card sleep-card">
+                    <div class="card-header">
+                        <span class="card-title">Sleep Performance</span>
+                        <div class="card-icon sleep"><i data-lucide="moon"></i></div>
+                    </div>
+                    <div class="card-value-container">
+                        <span class="card-value" id="valSleepPerf">--%</span>
+                        <span class="card-change" id="valSleepHours">-- hrs</span>
+                    </div>
+                    <div class="card-sub-metrics">
+                        <div class="sub-metric">
+                            <span class="sub-label">Consistency</span>
+                            <span class="sub-val" id="valSleepCons">--%</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span class="sub-label">Resp. Rate</span>
+                            <span class="sub-val" id="valRespRate">-- rpm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strain Card -->
+                <div class="metric-card strain-card">
+                    <div class="card-header">
+                        <span class="card-title">Day Strain</span>
+                        <div class="card-icon strain"><i data-lucide="flame"></i></div>
+                    </div>
+                    <div class="card-value-container">
+                        <span class="card-value" id="valStrain">--</span>
+                        <span class="card-change" id="valCalories">-- kcal</span>
+                    </div>
+                    <div class="card-sub-metrics">
+                        <div class="sub-metric">
+                            <span class="sub-label">Avg HR</span>
+                            <span class="sub-val" id="valAvgHR">-- bpm</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span class="sub-label">Max HR</span>
+                            <span class="sub-val" id="valMaxHR">-- bpm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workouts Card -->
+                <div class="metric-card workout-card">
+                    <div class="card-header">
+                        <span class="card-title">Workouts</span>
+                        <div class="card-icon workout"><i data-lucide="dumbbell"></i></div>
+                    </div>
+                    <div class="card-value-container">
+                        <span class="card-value" id="valWorkouts">--</span>
+                        <span class="card-change">This Period</span>
+                    </div>
+                    <div class="card-sub-metrics">
+                        <div class="sub-metric">
+                            <span class="sub-label">Body Weight</span>
+                            <span class="sub-val" id="valWeight">-- kg</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span class="sub-label">Height</span>
+                            <span class="sub-val" id="valHeight">-- m</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-grid">
+                <!-- Recovery Trend -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Recovery Trend</h3>
+                        <p class="chart-subtitle">Daily recovery score (%) with 3D, 7D, and 30D rolling averages</p>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="recoveryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Strain Trend -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Strain Trend</h3>
+                        <p class="chart-subtitle">Daily day strain (0-21) with 3D, 7D, and 30D rolling averages</p>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="strainChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Sleep Trend -->
+                <div class="chart-card large-chart">
+                    <div class="chart-header">
+                        <h3>Sleep Performance Trend</h3>
+                        <p class="chart-subtitle">Daily sleep performance (%) with 3D, 7D, and 30D rolling averages</p>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="sleepChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Workouts List Table -->
+            <section class="workouts-table-card">
+                <div class="table-header">
+                    <h3>Recent Workouts & Activities</h3>
+                    <p class="chart-subtitle">Detailed breakdown of training sessions</p>
+                </div>
+                <div class="table-wrapper">
+                    <table class="workouts-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Sport / Activity</th>
+                                <th>Strain</th>
+                                <th>Avg Heart Rate</th>
+                                <th>Max Heart Rate</th>
+                                <th>Energy Burned</th>
+                                <th>Distance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workoutsTableBody">
+                            <tr>
+                                <td colspan="7" class="empty-table-row">No workout data synced yet. Run a sync or authorize your account.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <span id="toastMessage">Syncing data...</span>
+    </div>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

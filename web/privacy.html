@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - WHOOP Performance Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #fafafa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        h1 {
+            color: #111111;
+            font-size: 28px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #222222;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+        p, li {
+            font-size: 16px;
+            color: #555555;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .last-updated {
+            font-style: italic;
+            color: #888888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .highlight-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid #0056b3;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .highlight-box p {
+            margin: 0;
+            font-weight: 500;
+            color: #004085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p class="last-updated">Last Updated: August 12, 2026</p>
+
+        <p>This Privacy Policy explains how the <strong>WHOOP Performance Dashboard</strong> ("we", "our", or "the Application") collects, stores, and handles your personal data when you connect your WHOOP account.</p>
+
+        <div class="highlight-box">
+            <p>🔒 Privacy Commitment: This application operates entirely locally on your device. We do not run any central servers, and your physiological data is never transmitted to us or any third parties.</p>
+        </div>
+
+        <h2>1. Data We Access</h2>
+        <p>When you authorize the Application using the official WHOOP Developer Portal, we request access to the following physiological and health metrics from your WHOOP profile:</p>
+        <ul>
+            <li><strong>Basic Profile:</strong> First name, last name, and email address (for dashboard personalization).</li>
+            <li><strong>Body Measurements:</strong> Height, weight, and maximum heart rate (to display user metrics).</li>
+            <li><strong>Physiological Cycles:</strong> Day strain, average heart rate, and caloric burn.</li>
+            <li><strong>Sleep Data:</strong> Sleep performance, stages (Deep, REM, Light, Wake), and sleep consistency.</li>
+            <li><strong>Recovery Scores:</strong> Daily recovery percentages, heart rate variability (HRV), resting heart rate (RHR), blood oxygen levels (SpO2), and skin temperature.</li>
+            <li><strong>Workouts & Activities:</strong> Workout strain, sport type, average/maximum heart rate, and duration.</li>
+        </ul>
+
+        <h2>2. Data Storage</h2>
+        <p>All data retrieved from the WHOOP API is stored in a local SQLite database (<code>whoop_data.db</code>) and local token files (<code>tokens.json</code>) in the Application's installation directory on your local machine.</p>
+        <ul>
+            <li>Your data remains strictly on your own physical computer.</li>
+            <li>No cloud databases, external APIs (except the official WHOOP API), or third-party analytics trackers are used.</li>
+        </ul>
+
+        <h2>3. Data Sharing</h2>
+        <p>We do not sell, rent, trade, or share your personal physiological data with any third-party company, advertising network, or service provider.</p>
+
+        <h2>4. Data Retention and Deletion</h2>
+        <p>Your local database will store historical data for as long as the Application is installed on your computer. You can delete all your stored data at any time by:</p>
+        <ul>
+            <li>Deleting the <code>whoop_data.db</code> and <code>tokens.json</code> files from your local storage.</li>
+            <li>Revoking the Application's OAuth access via the WHOOP Member Portal under your App Integrations settings.</li>
+        </ul>
+
+        <h2>5. Changes to This Policy</h2>
+        <p>Since this Application runs locally and does not collect your contact details, we will notify you of any policy changes by updating this page within the Application distribution.</p>
+
+        <h2>6. Contact</h2>
+        <p>If you have any questions about this Application or its local privacy practices, you can contact the developer directly at your registered email address.</p>
+    </div>
+</body>
+</html>
