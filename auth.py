@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CLIENT_ID = os.getenv("WHOOP_CLIENT_ID")
-CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET")
+CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "").strip()
+CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "").strip()
 REDIRECT_URI = os.getenv("WHOOP_REDIRECT_URI", "http://localhost:5000/callback")
 TOKENS_FILE = os.path.join(os.path.dirname(__file__), "tokens.json")
 

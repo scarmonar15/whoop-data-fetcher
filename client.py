@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CLIENT_ID = os.getenv("WHOOP_CLIENT_ID")
-CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET")
+CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "").strip()
+CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "").strip()
 BASE_URL = "https://api.prod.whoop.com"
 TOKENS_FILE = os.path.join(os.path.dirname(__file__), "tokens.json")
 
