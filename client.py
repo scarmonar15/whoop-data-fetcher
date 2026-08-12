@@ -8,7 +8,8 @@ load_dotenv()
 
 CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "").strip()
 CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "").strip()
-BASE_URL = "https://api.prod.whoop.com"
+BASE_URL = "https://api.prod.whoop.com/developer"
+TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"
 TOKENS_FILE = os.path.join(os.path.dirname(__file__), "tokens.json")
 
 class WhoopClient:
@@ -59,7 +60,7 @@ class WhoopClient:
         if not refresh_token:
             raise Exception("No refresh token found. Re-authorization required.")
 
-        url = f"{BASE_URL}/oauth/oauth2/token"
+        url = TOKEN_URL
         data = {
             "grant_type": "refresh_token",
             "refresh_token": refresh_token,
@@ -136,7 +137,7 @@ class WhoopClient:
         basic_data = basic_resp.json()
 
         # 2. Fetch body measurements
-        body_url = f"{BASE_URL}/v2/user/profile/body"
+        body_url = f"{BASE_URL}/v2/user/measurement/body"
         body_resp = requests.get(body_url, headers=headers)
         if body_resp.status_code != 200:
             raise Exception(f"Failed to fetch body measurements: {body_resp.text}")
@@ -148,7 +149,7 @@ class WhoopClient:
             "last_name": basic_data.get("last_name"),
             "email": basic_data.get("email"),
             "height_meter": body_data.get("height_meter"),
-            "weight_kg": body_data.get("weight_kg"),
+            "weight_kg": body_data.get("weight_kilogram"),
             "max_heart_rate": body_data.get("max_heart_rate")
         }
 
