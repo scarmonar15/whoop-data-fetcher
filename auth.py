@@ -219,7 +219,8 @@ def start_server():
     print(f"[*] Starting local server on {hostname}:{port} to listen for callback...")
     
     # Run Flask server
-    app.run(host="0.0.0.0", port=port, debug=False)
+    ssl_context = 'adhoc' if parsed_url.scheme == 'https' else None
+    app.run(host="0.0.0.0", port=port, debug=False, ssl_context=ssl_context)
 
 if __name__ == "__main__":
     start_server()
