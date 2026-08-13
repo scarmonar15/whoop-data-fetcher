@@ -230,7 +230,7 @@ def get_public_metrics():
     
     # Fetch sleep
     sleep_rows = query_db("""
-        SELECT s.sleep_performance_percent, c.start_time as date
+        SELECT s.sleep_performance_percentage, c.start_time as date
         FROM sleeps s
         LEFT JOIN cycles c ON s.cycle_id = c.id
         WHERE c.start_time IS NOT NULL
@@ -264,7 +264,7 @@ def get_public_metrics():
     return jsonify({
         "recovery": format_series(recovery_rows, 'recovery_score'),
         "strain": format_series(strain_rows, 'strain'),
-        "sleep_performance": format_series(sleep_rows, 'sleep_performance_percent')
+        "sleep_performance": format_series(sleep_rows, 'sleep_performance_percentage')
     })
 
 def daily_sync_loop():
