@@ -230,11 +230,10 @@ def get_public_metrics():
     
     # Fetch sleep
     sleep_rows = query_db("""
-        SELECT s.sleep_performance_percentage, c.start_time as date
-        FROM sleeps s
-        LEFT JOIN cycles c ON s.cycle_id = c.id
-        WHERE c.start_time IS NOT NULL
-        ORDER BY c.start_time ASC
+        SELECT sleep_performance_percentage, start_time as date
+        FROM sleeps
+        WHERE start_time IS NOT NULL
+        ORDER BY start_time ASC
     """)
     
     def format_series(rows, val_key):
