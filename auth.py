@@ -14,7 +14,7 @@ load_dotenv()
 CLIENT_ID = os.getenv("WHOOP_CLIENT_ID", "").strip()
 CLIENT_SECRET = os.getenv("WHOOP_CLIENT_SECRET", "").strip()
 REDIRECT_URI = os.getenv("WHOOP_REDIRECT_URI", "http://localhost:5000/callback")
-TOKENS_FILE = os.path.join(os.path.dirname(__file__), "tokens.json")
+TOKENS_FILE = os.getenv("TOKENS_PATH", os.path.join(os.path.dirname(__file__), "tokens.json"))
 
 app = Flask("WHOOP-OAuth-Server")
 auth_state = "".join(secrets.choice(string.ascii_letters + string.digits) for _ in range(16))
