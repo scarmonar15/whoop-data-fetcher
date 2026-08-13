@@ -213,7 +213,7 @@ def get_public_metrics():
     
     # Fetch recovery
     recovery_rows = query_db("""
-        SELECT r.recovery_score, c.start_time as date
+        SELECT r.recovery_score, r.hrv_rmssd, c.start_time as date
         FROM recovery r
         LEFT JOIN cycles c ON r.cycle_id = c.id
         WHERE c.start_time IS NOT NULL
@@ -263,7 +263,8 @@ def get_public_metrics():
     return jsonify({
         "recovery": format_series(recovery_rows, 'recovery_score'),
         "strain": format_series(strain_rows, 'strain'),
-        "sleep_performance": format_series(sleep_rows, 'sleep_performance_percentage')
+        "sleep_performance": format_series(sleep_rows, 'sleep_performance_percentage'),
+        "hrv": format_series(recovery_rows, 'hrv_rmssd')
     })
 
 def daily_sync_loop():
