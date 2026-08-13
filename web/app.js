@@ -4,6 +4,7 @@ let currentDays = 30;
 let recoveryChart = null;
 let strainChart = null;
 let sleepChart = null;
+let hrvChart = null;
 
 // DOM Elements
 const syncBtn = document.getElementById('syncBtn');
@@ -393,6 +394,80 @@ function renderCharts(recoveryList, sleepsList, cyclesList) {
                     grid: { color: 'rgba(255, 255, 255, 0.05)' },
                     ticks: { color: '#8e9bb0', font: { family: 'Outfit' } },
                     title: { display: true, text: 'Sleep Performance %', color: '#8e9bb0', font: { family: 'Outfit' } }
+    });
+
+    // 4. HRV TREND CHART (Score + 3D, 7D, 30D averages)
+    const hrvDates = recoveryList.map(r => formatDate(r.date || r.created_at));
+    const hrvScores = recoveryList.map(r => r.hrv_rmssd);
+    
+    const hrv3D = calculateRollingAverage(hrvScores, 3);
+    const hrv7D = calculateRollingAverage(hrvScores, 7);
+    const hrv30D = calculateRollingAverage(hrvScores, 30);
+
+    if (hrvChart) hrvChart.destroy();
+    
+    const ctxHrv = document.getElementById('hrvChart').getContext('2d');
+    hrvChart = new Chart(ctxHrv, {
+        type: 'line',
+        data: {
+            labels: hrvDates,
+            datasets: [
+                {
+                    label: 'Daily HRV (Raw)',
+                    data: hrvScores,
+                    showLine: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#ff007f', // Sleek hot pink for HRV
+                    pointBorderColor: 'rgba(7, 9, 14, 0.8)',
+                    pointBorderWidth: 1.5,
+                    borderColor: 'transparent',
+                    fill: false
+                },
+                {
+                    label: '3-Day Average',
+                    data: hrv3D,
+                    borderColor: 'rgba(255, 0, 127, 0.4)',
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    tension: 0.3,
+                    fill: false
+                },
+                {
+                    label: '7-Day Average',
+                    data: hrv7D,
+                    borderColor: '#ff007f',
+                    borderWidth: 2.5,
+                    pointRadius: 0,
+                    tension: 0.3,
+                    fill: false
+                },
+                {
+                    label: '30-Day Average',
+                    data: hrv30D,
+                    borderColor: '#9c27b0', // Purple for 30-day average
+                    borderWidth: 4,
+                    pointRadius: 0,
+                    tension: 0.3,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#ffffff', font: { family: 'Outfit', size: 11 } } }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#8e9bb0', font: { family: 'Outfit' } }
+                },
+                y: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#8e9bb0', font: { family: 'Outfit' } },
+                    title: { display: true, text: 'HRV (ms)', color: '#8e9bb0', font: { family: 'Outfit' } }
                 }
             }
         }
