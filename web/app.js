@@ -394,6 +394,9 @@ function renderCharts(recoveryList, sleepsList, cyclesList) {
                     grid: { color: 'rgba(255, 255, 255, 0.05)' },
                     ticks: { color: '#8e9bb0', font: { family: 'Outfit' } },
                     title: { display: true, text: 'Sleep Performance %', color: '#8e9bb0', font: { family: 'Outfit' } }
+                }
+            }
+        }
     });
 
     // 4. HRV TREND CHART (Score + 3D, 7D, 30D averages)
