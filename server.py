@@ -13,6 +13,9 @@ PORT = int(os.getenv("PORT", 8000))
 API_KEY = os.getenv("API_KEY")
 WEB_DIR = os.path.join(os.path.dirname(__file__), 'web')
 
+# Ensure database and tables exist at startup
+db.init_db()
+
 app = Flask("WHOOP-Dashboard-Server", static_folder=WEB_DIR)
 
 # Helper to execute a query and return rows as dictionary
