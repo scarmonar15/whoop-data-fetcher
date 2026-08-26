@@ -105,6 +105,16 @@ def init_db(db_path=DEFAULT_DB_PATH):
     )
     ''')
 
+    # Create habits table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS habits (
+        date TEXT,
+        habit_id TEXT,
+        completed INTEGER,
+        PRIMARY KEY (date, habit_id)
+    )
+    ''')
+
     conn.commit()
     conn.close()
 
@@ -259,5 +269,43 @@ def get_latest_updated_at(table_name, db_path=DEFAULT_DB_PATH):
         return row[0] if row and row[0] else None
     except sqlite3.OperationalError:
         return None
+    finally:
+        conn.close()
+
+def get_habits(date_str, db_path=DEFAULT_DB_PATH):
+    """Retrieves completion status of habits for a specific date (YYYY-MM-DD)."""
+    conn = get_connection(db_path)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT habit_id, completed FROM habits WHERE date = ?", (date_str,))
+        rows = cursor.fetchall()
+        return {row["habit_id"]: bool(row["completed"]) for row in rows}
+    except Exception as e:
+        print(f"[-] Error loading habits: {e}")
+        return {}
+    finally:
+        conn.close()
+
+def toggle_habit(date_str, habit_id, db_path=DEFAULT_DB_PATH):
+    """Toggles completion status of a habit for a specific date."""
+    conn = get_connection(db_path)
+    cursor = conn.cursor()
+    try:
+        # Check current status
+        cursor.execute("SELECT completed FROM habits WHERE date = ? AND habit_id = ?", (date_str, habit_id))
+        row = cursor.fetchone()
+        
+        if row is None:
+            new_val = 1
+            cursor.execute("INSERT INTO habits (date, habit_id, completed) VALUES (?, ?, ?)", (date_str, habit_id, new_val))
+        else:
+            new_val = 0 if row["completed"] else 1
+            cursor.execute("UPDATE habits SET completed = ? WHERE date = ? AND habit_id = ?", (new_val, date_str, habit_id))
+            
+        conn.commit()
+        return bool(new_val)
+    except Exception as e:
+        print(f"[-] Error toggling habit: {e}")
+        return False
     finally:
         conn.close()

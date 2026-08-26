@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Command Center</title>
+    <!-- Outfit Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="screen_style.css">
+</head>
+<body>
+    <div class="screen-container">
+        <!-- HEADER: Time, Date and Weather -->
+        <header class="screen-header glass-card">
+            <div class="time-block">
+                <div class="clock" id="screenClock">00:00</div>
+                <div class="date" id="screenDate">Loading date...</div>
+            </div>
+            
+            <div class="weather-block" id="weatherBlock">
+                <div class="weather-info">
+                    <div class="weather-temp" id="weatherTemp">--°C</div>
+                    <div class="weather-desc" id="weatherDesc">Loading weather...</div>
+                </div>
+                <div class="weather-icon-container">
+                    <i data-lucide="cloud-sun" class="weather-icon" id="weatherIcon"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT GRID -->
+        <div class="main-grid">
+            
+            <!-- WHOOP HEALTH METRICS MODULE -->
+            <section class="module-card glass-card">
+                <div class="module-header">
+                    <i data-lucide="activity" class="module-icon icon-health"></i>
+                    <h2>WHOOP Physiological Metrics</h2>
+                </div>
+                
+                <div class="metrics-grid">
+                    <!-- Recovery -->
+                    <div class="metric-item">
+                        <div class="metric-label">Recovery</div>
+                        <div class="metric-value-container">
+                            <span class="metric-val text-green" id="screenRecovery">--%</span>
+                            <i data-lucide="heart-pulse" class="metric-sub-icon text-green"></i>
+                        </div>
+                    </div>
+
+                    <!-- Sleep Performance -->
+                    <div class="metric-item">
+                        <div class="metric-label">Sleep Performance</div>
+                        <div class="metric-value-container">
+                            <span class="metric-val text-blue" id="screenSleep">--%</span>
+                            <i data-lucide="moon" class="metric-sub-icon text-blue"></i>
+                        </div>
+                    </div>
+
+                    <!-- HRV -->
+                    <div class="metric-item">
+                        <div class="metric-label">HRV (RMSSD)</div>
+                        <div class="metric-value-container">
+                            <span class="metric-val text-pink" id="screenHRV">-- ms</span>
+                            <i data-lucide="activity" class="metric-sub-icon text-pink"></i>
+                        </div>
+                    </div>
+
+                    <!-- Resting HR -->
+                    <div class="metric-item">
+                        <div class="metric-label">Resting HR</div>
+                        <div class="metric-value-container">
+                            <span class="metric-val text-orange" id="screenRHR">-- bpm</span>
+                            <i data-lucide="heart" class="metric-sub-icon text-orange"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HABIT TRACKER MODULE -->
+            <section class="module-card glass-card">
+                <div class="module-header">
+                    <i data-lucide="check-circle-2" class="module-icon icon-habits"></i>
+                    <h2>Daily Habits</h2>
+                </div>
+                
+                <div class="habits-list">
+                    <!-- Protein Intake -->
+                    <button class="habit-btn" id="habit_protein" onclick="toggleHabit('protein')">
+                        <div class="habit-info">
+                            <span class="habit-title">Protein Intake</span>
+                            <span class="habit-desc">Target daily intake met</span>
+                        </div>
+                        <div class="habit-checkbox">
+                            <i data-lucide="circle" class="habit-icon-check"></i>
+                        </div>
+                    </button>
+
+                    <!-- Creatine Intake -->
+                    <button class="habit-btn" id="habit_creatine" onclick="toggleHabit('creatine')">
+                        <div class="habit-info">
+                            <span class="habit-title">Creatine Intake</span>
+                            <span class="habit-desc">Daily 5g supplement</span>
+                        </div>
+                        <div class="habit-checkbox">
+                            <i data-lucide="circle" class="habit-icon-check"></i>
+                        </div>
+                    </button>
+
+                    <!-- Stretching -->
+                    <button class="habit-btn" id="habit_stretching" onclick="toggleHabit('stretching')">
+                        <div class="habit-info">
+                            <span class="habit-title">Stretching Routine</span>
+                            <span class="habit-desc">Full-body mobility session</span>
+                        </div>
+                        <div class="habit-checkbox">
+                            <i data-lucide="circle" class="habit-icon-check"></i>
+                        </div>
+                    </button>
+
+                    <!-- Core -->
+                    <button class="habit-btn" id="habit_core" onclick="toggleHabit('core')">
+                        <div class="habit-info">
+                            <span class="habit-title">Core Exercises</span>
+                            <span class="habit-desc">Stability and abdominal set</span>
+                        </div>
+                        <div class="habit-checkbox">
+                            <i data-lucide="circle" class="habit-icon-check"></i>
+                        </div>
+                    </button>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <span id="toastMessage">Updating...</span>
+    </div>
+
+    <script src="screen_app.js"></script>
+</body>
+</html>

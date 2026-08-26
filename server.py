@@ -175,6 +175,47 @@ def trigger_sync():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route('/screen')
+def serve_screen():
+    return send_from_directory(WEB_DIR, 'screen.html')
+
+@app.route('/api/weather')
+def get_weather():
+    try:
+        import requests
+        # Coordinates for Rionegro, Colombia
+        url = "https://api.open-meteo.com/v1/forecast?latitude=6.1552&longitude=-75.3738&current_weather=true&timezone=auto"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            return jsonify(data.get("current_weather", {}))
+        return jsonify({"error": "Failed to fetch weather"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/habits', methods=['GET'])
+def get_habits_endpoint():
+    date_str = request.args.get('date')
+    if not date_str:
+        from datetime import datetime
+        date_str = datetime.now().strftime("%Y-%m-%d")
+    habits = db.get_habits(date_str)
+    return jsonify(habits)
+
+@app.route('/api/habits/toggle', methods=['POST'])
+def toggle_habit_endpoint():
+    try:
+        data = request.json or {}
+        date_str = data.get('date')
+        habit_id = data.get('habit_id')
+        if not date_str or not habit_id:
+            return jsonify({"error": "Missing date or habit_id"}), 400
+        
+        completed = db.toggle_habit(date_str, habit_id)
+        return jsonify({"status": "success", "habit_id": habit_id, "completed": completed})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):
