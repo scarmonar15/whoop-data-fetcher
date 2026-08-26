@@ -115,6 +115,14 @@ def init_db(db_path=DEFAULT_DB_PATH):
     )
     ''')
 
+    # Create water table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS water (
+        date TEXT PRIMARY KEY,
+        amount_ml INTEGER
+    )
+    ''')
+
     conn.commit()
     conn.close()
 
@@ -307,5 +315,73 @@ def toggle_habit(date_str, habit_id, db_path=DEFAULT_DB_PATH):
     except Exception as e:
         print(f"[-] Error toggling habit: {e}")
         return False
+    finally:
+        conn.close()
+
+def get_water(date_str, db_path=DEFAULT_DB_PATH):
+    """Gets water intake (ml) for a specific date."""
+    conn = get_connection(db_path)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT amount_ml FROM water WHERE date = ?", (date_str,))
+        row = cursor.fetchone()
+        return row["amount_ml"] if row else 0
+    except Exception as e:
+        print(f"[-] Error loading water: {e}")
+        return 0
+    finally:
+        conn.close()
+
+def increment_water(date_str, increment_ml, db_path=DEFAULT_DB_PATH):
+    """Increments water intake (ml) for a specific date, returning the new total."""
+    conn = get_connection(db_path)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT amount_ml FROM water WHERE date = ?", (date_str,))
+        row = cursor.fetchone()
+        
+        if row is None:
+            new_val = increment_ml
+            cursor.execute("INSERT INTO water (date, amount_ml) VALUES (?, ?)", (date_str, new_val))
+        else:
+            new_val = row["amount_ml"] + increment_ml
+            cursor.execute("UPDATE water SET amount_ml = ? WHERE date = ?", (new_val, date_str))
+            
+        conn.commit()
+        return new_val
+    except Exception as e:
+        print(f"[-] Error incrementing water: {e}")
+        return 0
+    finally:
+        conn.close()
+
+def get_habit_history(start_date_str, num_days=7, db_path=DEFAULT_DB_PATH):
+    """Gets habit completion history for the N days leading up to start_date_str."""
+    conn = get_connection(db_path)
+    cursor = conn.cursor()
+    try:
+        from datetime import datetime, timedelta
+        start_dt = datetime.strptime(start_date_str, "%Y-%m-%d")
+        dates = [(start_dt - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(num_days)]
+        dates.reverse() # Oldest to newest
+        
+        history = {}
+        # Fetch rows for all of these dates
+        placeholders = ','.join('?' for _ in dates)
+        cursor.execute(f"SELECT date, habit_id, completed FROM habits WHERE date IN ({placeholders})", dates)
+        rows = cursor.fetchall()
+        
+        for row in rows:
+            hid = row["habit_id"]
+            dt = row["date"]
+            comp = bool(row["completed"])
+            if hid not in history:
+                history[hid] = {}
+            history[hid][dt] = comp
+            
+        return {"dates": dates, "history": history}
+    except Exception as e:
+        print(f"[-] Error loading habit history: {e}")
+        return {"dates": [], "history": {}}
     finally:
         conn.close()

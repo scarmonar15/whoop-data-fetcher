@@ -9,6 +9,7 @@
     --accent-blue: #2979ff;
     --accent-pink: #ff007f;
     --accent-orange: #ff9100;
+    --accent-purple: #af52de;
 }
 
 * {
@@ -22,17 +23,16 @@ body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
-    overflow: hidden; /* Optimized for single-screen smart displays */
+    overflow-y: auto; /* Allow scrolling if screen is smaller, but styled for full-screen */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 24px;
 }
 
 .screen-container {
     width: 100%;
-    max-width: 1200px;
-    height: 90vh;
+    max-width: 1400px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -44,9 +44,9 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* Header Section */
@@ -54,7 +54,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 140px;
+    height: 120px;
     flex-shrink: 0;
 }
 
@@ -64,14 +64,14 @@ body {
 }
 
 .clock {
-    font-size: 64px;
+    font-size: 56px;
     font-weight: 700;
     line-height: 1;
     letter-spacing: -2px;
 }
 
 .date {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-secondary);
     font-weight: 500;
     margin-top: 4px;
@@ -80,7 +80,7 @@ body {
 .weather-block {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
 }
 
 .weather-info {
@@ -88,13 +88,13 @@ body {
 }
 
 .weather-temp {
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 700;
     line-height: 1;
 }
 
 .weather-desc {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text-secondary);
     font-weight: 500;
     margin-top: 4px;
@@ -103,75 +103,164 @@ body {
 .weather-icon-container {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
-    width: 68px;
-    height: 68px;
-    border-radius: 18px;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .weather-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     color: var(--accent-blue);
 }
 
-/* Main Grid Layout */
+/* Main Grid Layout (3 Columns) */
 .main-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     flex-grow: 1;
 }
 
-.module-card {
+.grid-column {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
+.module-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .module-header {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 16px;
+    padding-bottom: 12px;
+}
+
+.module-header.no-border {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .module-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
 }
 
-.icon-health { color: var(--accent-pink); }
-.icon-habits { color: var(--accent-green); }
+.icon-blue { color: var(--accent-blue); }
+.icon-green { color: var(--accent-green); }
+.icon-pink { color: var(--accent-pink); }
+.icon-orange { color: var(--accent-orange); }
+.icon-purple { color: var(--accent-purple); }
 
 .module-header h2 {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 600;
+}
+
+/* Google Calendar Agenda Widget */
+.agenda-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.agenda-item {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.agenda-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    width: 75px;
+    flex-shrink: 0;
+}
+
+.agenda-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* Linear Priorities Widget */
+.priorities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.priority-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.priority-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.priority-key {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-purple);
+}
+
+.priority-level {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: rgba(175, 82, 222, 0.15);
+    color: var(--accent-purple);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.priority-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
 /* WHOOP Metrics Grid */
 .metrics-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 16px;
     flex-grow: 1;
 }
 
 .metric-item {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color);
-    border-radius: 18px;
-    padding: 24px;
+    border-radius: 14px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .metric-label {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
 }
@@ -180,18 +269,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 16px;
+    margin-top: 12px;
 }
 
 .metric-val {
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 700;
     line-height: 1;
 }
 
 .metric-sub-icon {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
 }
 
 /* Color Accents */
@@ -200,20 +289,69 @@ body {
 .text-pink { color: var(--accent-pink); }
 .text-orange { color: var(--accent-orange); }
 
+/* Commute & Traffic Widget */
+.commute-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.commute-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.commute-loc {
+    display: flex;
+    flex-direction: column;
+}
+
+.commute-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.commute-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.commute-status {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.commute-time {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.commute-indicator {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
 /* Habits List style */
 .habits-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    flex-grow: 1;
-    justify-content: space-between;
+    gap: 12px;
 }
 
 .habit-btn {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color);
-    border-radius: 18px;
-    padding: 20px 24px;
+    border-radius: 14px;
+    padding: 14px 18px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -224,35 +362,51 @@ body {
 }
 
 .habit-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
 }
 
 .habit-btn.completed {
-    background: rgba(0, 230, 118, 0.05);
-    border-color: rgba(0, 230, 118, 0.3);
+    background: rgba(0, 230, 118, 0.03);
+    border-color: rgba(0, 230, 118, 0.2);
 }
 
 .habit-info {
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
 .habit-title {
     color: var(--text-primary);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
 }
 
-.habit-desc {
-    color: var(--text-secondary);
-    font-size: 13px;
-    margin-top: 2px;
+/* Habits Streaks Grid */
+.habit-streak {
+    display: flex;
+    gap: 4px;
+}
+
+.streak-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.streak-dot.completed {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+    box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
 }
 
 .habit-checkbox {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
@@ -260,6 +414,7 @@ body {
     justify-content: center;
     align-items: center;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .habit-btn.completed .habit-checkbox {
@@ -272,9 +427,180 @@ body {
 }
 
 .habit-icon-check {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     color: var(--text-secondary);
+}
+
+/* Water Intake Widget */
+.water-tracker {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 4px;
+}
+
+.water-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.water-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-blue);
+}
+
+.water-target {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.water-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.water-bar-fill {
+    height: 100%;
+    background: var(--accent-blue);
+    border-radius: 5px;
+    box-shadow: 0 0 8px rgba(41, 121, 255, 0.5);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.water-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.water-btn {
+    flex-grow: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.water-btn:hover {
+    background: rgba(41, 121, 255, 0.08);
+    border-color: rgba(41, 121, 255, 0.3);
+    color: var(--accent-blue);
+}
+
+.water-btn.btn-reset {
+    flex-grow: 0;
+    width: 42px;
+}
+
+.water-btn.btn-reset:hover {
+    background: rgba(255, 23, 68, 0.08);
+    border-color: rgba(255, 23, 68, 0.3);
+    color: #ff1744;
+}
+
+.btn-reset-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Spotify Now Playing Card */
+.spotify-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.spotify-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 230, 118, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.spotify-content {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.album-art-container {
+    width: 68px;
+    height: 68px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.fallback-art-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent-green);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.track-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.track-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.spotify-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    margin-top: 6px;
+}
+
+.spotify-progress-fill {
+    height: 100%;
+    background: var(--accent-green);
+    border-radius: 2px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.7; }
 }
 
 /* Toast styling */
@@ -303,20 +629,20 @@ body {
 }
 
 /* Responsive Styles */
-@media (max-width: 900px) {
-    body {
-        overflow-y: auto;
+@media (max-width: 1100px) {
+    .main-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .screen-container {
-        height: auto;
-    }
+}
+
+@media (max-width: 750px) {
     .main-grid {
         grid-template-columns: 1fr;
     }
     .screen-header {
         flex-direction: column;
         height: auto;
-        padding-block: 24px;
+        padding-block: 20px;
         gap: 16px;
     }
     .time-block, .weather-info {

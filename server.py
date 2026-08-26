@@ -219,6 +219,40 @@ def toggle_habit_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/water', methods=['GET'])
+def get_water_endpoint():
+    date_str = request.args.get('date')
+    if not date_str:
+        from datetime import datetime
+        date_str = datetime.now().strftime("%Y-%m-%d")
+    amount = db.get_water(date_str)
+    return jsonify({"amount_ml": amount})
+
+@app.route('/api/water/increment', methods=['POST'])
+def increment_water_endpoint():
+    try:
+        data = request.json or {}
+        date_str = data.get('date')
+        increment_ml = data.get('increment_ml', 250)
+        if not date_str:
+            from datetime import datetime
+            date_str = datetime.now().strftime("%Y-%m-%d")
+        
+        amount = db.increment_water(date_str, increment_ml)
+        return jsonify({"status": "success", "amount_ml": amount})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/habits/history', methods=['GET'])
+def get_habits_history_endpoint():
+    date_str = request.args.get('date')
+    days = request.args.get('days', type=int, default=7)
+    if not date_str:
+        from datetime import datetime
+        date_str = datetime.now().strftime("%Y-%m-%d")
+    history = db.get_habit_history(date_str, days)
+    return jsonify(history)
+
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):

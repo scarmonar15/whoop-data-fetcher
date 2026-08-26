@@ -30,108 +30,189 @@
             </div>
         </header>
 
-        <!-- MAIN LAYOUT GRID -->
+        <!-- MAIN LAYOUT GRID (3-Column Jarvis Style) -->
         <div class="main-grid">
             
-            <!-- WHOOP HEALTH METRICS MODULE -->
-            <section class="module-card glass-card">
-                <div class="module-header">
-                    <i data-lucide="activity" class="module-icon icon-health"></i>
-                    <h2>WHOOP Physiological Metrics</h2>
-                </div>
-                
-                <div class="metrics-grid">
-                    <!-- Recovery -->
-                    <div class="metric-item">
-                        <div class="metric-label">Recovery</div>
-                        <div class="metric-value-container">
-                            <span class="metric-val text-green" id="screenRecovery">--%</span>
-                            <i data-lucide="heart-pulse" class="metric-sub-icon text-green"></i>
+            <!-- COLUMN 1: AGENDA & PRIORITIES -->
+            <div class="grid-column">
+                <!-- Google Calendar Agenda (Mocked) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="calendar" class="module-icon icon-blue"></i>
+                        <h2>Today's Agenda</h2>
+                    </div>
+                    <div class="agenda-list" id="agendaList">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Linear Priorities (Mocked) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="check-square" class="module-icon icon-purple"></i>
+                        <h2>Linear Priorities</h2>
+                    </div>
+                    <div class="priorities-list" id="prioritiesList">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- COLUMN 2: HEALTH & COMMUTE -->
+            <div class="grid-column">
+                <!-- WHOOP Health Metrics (Real DB) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="activity" class="module-icon icon-pink"></i>
+                        <h2>WHOOP Metrics</h2>
+                    </div>
+                    <div class="metrics-grid">
+                        <!-- Recovery -->
+                        <div class="metric-item">
+                            <div class="metric-label">Recovery</div>
+                            <div class="metric-value-container">
+                                <span class="metric-val text-green" id="screenRecovery">--%</span>
+                                <i data-lucide="heart-pulse" class="metric-sub-icon text-green"></i>
+                            </div>
+                        </div>
+
+                        <!-- Sleep Performance -->
+                        <div class="metric-item">
+                            <div class="metric-label">Sleep Performance</div>
+                            <div class="metric-value-container">
+                                <span class="metric-val text-blue" id="screenSleep">--%</span>
+                                <i data-lucide="moon" class="metric-sub-icon text-blue"></i>
+                            </div>
+                        </div>
+
+                        <!-- HRV -->
+                        <div class="metric-item">
+                            <div class="metric-label">HRV (RMSSD)</div>
+                            <div class="metric-value-container">
+                                <span class="metric-val text-pink" id="screenHRV">-- ms</span>
+                                <i data-lucide="activity" class="metric-sub-icon text-pink"></i>
+                            </div>
+                        </div>
+
+                        <!-- Resting HR -->
+                        <div class="metric-item">
+                            <div class="metric-label">Resting HR</div>
+                            <div class="metric-value-container">
+                                <span class="metric-val text-orange" id="screenRHR">-- bpm</span>
+                                <i data-lucide="heart" class="metric-sub-icon text-orange"></i>
+                            </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- Sleep Performance -->
-                    <div class="metric-item">
-                        <div class="metric-label">Sleep Performance</div>
-                        <div class="metric-value-container">
-                            <span class="metric-val text-blue" id="screenSleep">--%</span>
-                            <i data-lucide="moon" class="metric-sub-icon text-blue"></i>
+                <!-- Commute & Traffic (Mocked) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="navigation" class="module-icon icon-orange"></i>
+                        <h2>Commute & Traffic</h2>
+                    </div>
+                    <div class="commute-list" id="commuteList">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- COLUMN 3: HABITS, WATER & MUSIC -->
+            <div class="grid-column">
+                <!-- Daily Habits with Streaks (Real DB) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="check-circle-2" class="module-icon icon-green"></i>
+                        <h2>Daily Habits</h2>
+                    </div>
+                    <div class="habits-list">
+                        <!-- Protein Intake -->
+                        <button class="habit-btn" id="habit_protein" onclick="toggleHabit('protein')">
+                            <div class="habit-info">
+                                <span class="habit-title">Protein Intake</span>
+                                <div class="habit-streak" id="streak_protein"></div>
+                            </div>
+                            <div class="habit-checkbox">
+                                <i data-lucide="circle" class="habit-icon-check"></i>
+                            </div>
+                        </button>
+
+                        <!-- Creatine Intake -->
+                        <button class="habit-btn" id="habit_creatine" onclick="toggleHabit('creatine')">
+                            <div class="habit-info">
+                                <span class="habit-title">Creatine Intake</span>
+                                <div class="habit-streak" id="streak_creatine"></div>
+                            </div>
+                            <div class="habit-checkbox">
+                                <i data-lucide="circle" class="habit-icon-check"></i>
+                            </div>
+                        </button>
+
+                        <!-- Stretching -->
+                        <button class="habit-btn" id="habit_stretching" onclick="toggleHabit('stretching')">
+                            <div class="habit-info">
+                                <span class="habit-title">Stretching</span>
+                                <div class="habit-streak" id="streak_stretching"></div>
+                            </div>
+                            <div class="habit-checkbox">
+                                <i data-lucide="circle" class="habit-icon-check"></i>
+                            </div>
+                        </button>
+
+                        <!-- Core -->
+                        <button class="habit-btn" id="habit_core" onclick="toggleHabit('core')">
+                            <div class="habit-info">
+                                <span class="habit-title">Core Exercises</span>
+                                <div class="habit-streak" id="streak_core"></div>
+                            </div>
+                            <div class="habit-checkbox">
+                                <i data-lucide="circle" class="habit-icon-check"></i>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Hydration Tracker (Real DB) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="droplet" class="module-icon icon-blue"></i>
+                        <h2>Hydration Tracker</h2>
+                    </div>
+                    <div class="water-tracker">
+                        <div class="water-progress">
+                            <div class="water-text">
+                                <span id="waterCurrent">0</span> <span class="water-target">/ 2000 ml</span>
+                            </div>
+                            <div class="water-bar">
+                                <div class="water-bar-fill" id="waterBarFill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="water-actions">
+                            <button class="water-btn" onclick="addWater(250)">+250ml</button>
+                            <button class="water-btn" onclick="addWater(500)">+500ml</button>
+                            <button class="water-btn btn-reset" onclick="resetWater()">
+                                <i data-lucide="rotate-ccw" class="btn-reset-icon"></i>
+                            </button>
                         </div>
                     </div>
+                </section>
 
-                    <!-- HRV -->
-                    <div class="metric-item">
-                        <div class="metric-label">HRV (RMSSD)</div>
-                        <div class="metric-value-container">
-                            <span class="metric-val text-pink" id="screenHRV">-- ms</span>
-                            <i data-lucide="activity" class="metric-sub-icon text-pink"></i>
+                <!-- Spotify "Now Playing" (Mocked) -->
+                <section class="module-card glass-card spotify-card">
+                    <div class="spotify-content">
+                        <div class="album-art-container">
+                            <i data-lucide="music" class="fallback-art-icon"></i>
+                        </div>
+                        <div class="track-info">
+                            <div class="track-name" id="spotifyTrack">After Hours</div>
+                            <div class="track-artist" id="spotifyArtist">The Weeknd</div>
+                            <div class="spotify-progress-bar">
+                                <div class="spotify-progress-fill" id="spotifyProgressFill" style="width: 48%;"></div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Resting HR -->
-                    <div class="metric-item">
-                        <div class="metric-label">Resting HR</div>
-                        <div class="metric-value-container">
-                            <span class="metric-val text-orange" id="screenRHR">-- bpm</span>
-                            <i data-lucide="heart" class="metric-sub-icon text-orange"></i>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- HABIT TRACKER MODULE -->
-            <section class="module-card glass-card">
-                <div class="module-header">
-                    <i data-lucide="check-circle-2" class="module-icon icon-habits"></i>
-                    <h2>Daily Habits</h2>
-                </div>
-                
-                <div class="habits-list">
-                    <!-- Protein Intake -->
-                    <button class="habit-btn" id="habit_protein" onclick="toggleHabit('protein')">
-                        <div class="habit-info">
-                            <span class="habit-title">Protein Intake</span>
-                            <span class="habit-desc">Target daily intake met</span>
-                        </div>
-                        <div class="habit-checkbox">
-                            <i data-lucide="circle" class="habit-icon-check"></i>
-                        </div>
-                    </button>
-
-                    <!-- Creatine Intake -->
-                    <button class="habit-btn" id="habit_creatine" onclick="toggleHabit('creatine')">
-                        <div class="habit-info">
-                            <span class="habit-title">Creatine Intake</span>
-                            <span class="habit-desc">Daily 5g supplement</span>
-                        </div>
-                        <div class="habit-checkbox">
-                            <i data-lucide="circle" class="habit-icon-check"></i>
-                        </div>
-                    </button>
-
-                    <!-- Stretching -->
-                    <button class="habit-btn" id="habit_stretching" onclick="toggleHabit('stretching')">
-                        <div class="habit-info">
-                            <span class="habit-title">Stretching Routine</span>
-                            <span class="habit-desc">Full-body mobility session</span>
-                        </div>
-                        <div class="habit-checkbox">
-                            <i data-lucide="circle" class="habit-icon-check"></i>
-                        </div>
-                    </button>
-
-                    <!-- Core -->
-                    <button class="habit-btn" id="habit_core" onclick="toggleHabit('core')">
-                        <div class="habit-info">
-                            <span class="habit-title">Core Exercises</span>
-                            <span class="habit-desc">Stability and abdominal set</span>
-                        </div>
-                        <div class="habit-checkbox">
-                            <i data-lucide="circle" class="habit-icon-check"></i>
-                        </div>
-                    </button>
-                </div>
-            </section>
+                </section>
+            </div>
             
         </div>
     </div>
