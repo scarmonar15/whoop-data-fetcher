@@ -79,7 +79,7 @@
         <!-- MAIN LAYOUT GRID (3-Column Jarvis Style) -->
         <div class="main-grid">
             
-            <!-- COLUMN 1: AGENDA & PRIORITIES -->
+            <!-- COLUMN 1: AGENDA -->
             <div class="grid-column">
                 <!-- Google Calendar Agenda (Mocked) -->
                 <section class="module-card glass-card">
@@ -91,20 +91,9 @@
                         <!-- Populated by JS -->
                     </div>
                 </section>
-
-                <!-- Linear Priorities (Mocked) -->
-                <section class="module-card glass-card">
-                    <div class="module-header">
-                        <i data-lucide="check-square" class="module-icon icon-purple"></i>
-                        <h2>Linear Priorities</h2>
-                    </div>
-                    <div class="priorities-list" id="prioritiesList">
-                        <!-- Populated by JS -->
-                    </div>
-                </section>
             </div>
 
-            <!-- COLUMN 2: COMMUTE & MUSIC -->
+            <!-- COLUMN 2: COMMUTE & PRIORITIES -->
             <div class="grid-column">
                 <!-- Commute & Traffic (Mocked) -->
                 <section class="module-card glass-card">
@@ -117,19 +106,14 @@
                     </div>
                 </section>
 
-                <!-- Spotify "Now Playing" (Mocked) -->
-                <section class="module-card glass-card spotify-card">
-                    <div class="spotify-content">
-                        <div class="album-art-container">
-                            <i data-lucide="music" class="fallback-art-icon"></i>
-                        </div>
-                        <div class="track-info">
-                            <div class="track-name" id="spotifyTrack">After Hours</div>
-                            <div class="track-artist" id="spotifyArtist">The Weeknd</div>
-                            <div class="spotify-progress-bar">
-                                <div class="spotify-progress-fill" id="spotifyProgressFill" style="width: 48%;"></div>
-                            </div>
-                        </div>
+                <!-- Linear Priorities (Mocked) -->
+                <section class="module-card glass-card">
+                    <div class="module-header">
+                        <i data-lucide="check-square" class="module-icon icon-purple"></i>
+                        <h2>Linear Priorities</h2>
+                    </div>
+                    <div class="priorities-list" id="prioritiesList">
+                        <!-- Populated by JS -->
                     </div>
                 </section>
             </div>

@@ -368,22 +368,6 @@ async function resetWater() {
     }
 }
 
-// 9. MOCKED SPOTIFY TRACK PROGRESS
-function runSpotifyMockProgress() {
-    const fill = document.getElementById('spotifyProgressFill');
-    if (!fill) return;
-    
-    setInterval(() => {
-        let widthPct = parseFloat(fill.style.width);
-        if (widthPct >= 100) {
-            widthPct = 0; // restart
-        } else {
-            widthPct += 0.3; // simulate playing
-        }
-        fill.style.width = `${widthPct}%`;
-    }, 1000);
-}
-
 // 10. WHOOP DATA SYNC TRIGGER
 async function triggerSync() {
     const syncIcon = document.getElementById('syncIcon');
@@ -444,7 +428,6 @@ fetchWeather();
 fetchWhoopMetrics();
 fetchHabits();
 fetchWaterIntake();
-runSpotifyMockProgress();
 
 // Refresh live endpoints every 10 minutes
 setInterval(() => {
