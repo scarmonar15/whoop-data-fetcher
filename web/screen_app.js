@@ -361,6 +361,37 @@ function runSpotifyMockProgress() {
     }, 1000);
 }
 
+// 10. WHOOP DATA SYNC TRIGGER
+async function triggerSync() {
+    const syncIcon = document.getElementById('syncIcon');
+    if (!syncIcon || syncIcon.classList.contains('spin')) return;
+    
+    syncIcon.classList.add('spin');
+    showToast('Requesting data sync from WHOOP API...');
+    
+    try {
+        const response = await fetch('/api/sync', { method: 'POST' });
+        const result = await response.json();
+        
+        if (response.ok) {
+            showToast('Sync completed successfully!');
+            // Wait 1.5s then fetch latest metrics
+            setTimeout(async () => {
+                await fetchWhoopMetrics();
+            }, 1500);
+        } else {
+            showToast(`Sync failed: ${result.error || 'Server error'}`, true);
+        }
+    } catch (err) {
+        showToast('Connection error. Server may not be running.', true);
+    } finally {
+        // Wait a brief moment before removing spin for nice visual transition
+        setTimeout(() => {
+            syncIcon.classList.remove('spin');
+        }, 1500);
+    }
+}
+
 // Toast Notification Helper
 function showToast(message, isError = false) {
     toastMessage.textContent = message;

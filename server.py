@@ -426,30 +426,30 @@ def get_public_metrics():
         "hrv": format_series(recovery_rows, 'hrv_rmssd')
     })
 
-def daily_sync_loop():
+def periodic_sync_loop():
     import time
     # Sleep 30s initially to let the server startup fully
     time.sleep(30)
     while True:
         try:
-            print("[*] Running scheduled daily sync...")
+            print("[*] Running scheduled periodic sync...")
             from fetch import run_pull
             run_pull()
-            print("[+] Scheduled daily sync completed successfully.")
+            print("[+] Scheduled periodic sync completed successfully.")
         except Exception as e:
             print(f"[-] Scheduled sync error: {e}")
-        # Sleep for 24 hours
-        time.sleep(86400)
+        # Sleep for 4 hours
+        time.sleep(14400)
 
 def main():
     # Make sure DB exists
     db.init_db()
     
-    # Start background daily sync thread (prevent double-start in Flask debug mode)
+    # Start background periodic sync thread (prevent double-start in Flask debug mode)
     import threading
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
-        threading.Thread(target=daily_sync_loop, daemon=True).start()
-        print("[*] Started background daily sync thread.")
+        threading.Thread(target=periodic_sync_loop, daemon=True).start()
+        print("[*] Started background periodic sync thread.")
         
     print(f"[*] Starting local server on http://localhost:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=True)
