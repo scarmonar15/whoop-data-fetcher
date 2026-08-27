@@ -12,23 +12,65 @@
 </head>
 <body>
     <div class="screen-container">
-        <!-- HEADER: Time, Date and Weather -->
-        <header class="screen-header glass-card">
-            <div class="time-block">
-                <div class="clock" id="screenClock">00:00</div>
-                <div class="date" id="screenDate">Loading date...</div>
-            </div>
-            
-            <div class="weather-block" id="weatherBlock">
-                <div class="weather-info">
-                    <div class="weather-temp" id="weatherTemp">--°C</div>
-                    <div class="weather-desc" id="weatherDesc">Loading weather...</div>
+        <!-- TOP PANEL: Weather & Clock (40%) + WHOOP Pills (60%) -->
+        <div class="top-panel">
+            <!-- Clock, Date & Weather Card (40%) -->
+            <header class="screen-header glass-card">
+                <div class="time-block">
+                    <div class="clock" id="screenClock">00:00</div>
+                    <div class="date" id="screenDate">Loading date...</div>
                 </div>
-                <div class="weather-icon-container">
-                    <i data-lucide="cloud-sun" class="weather-icon" id="weatherIcon"></i>
+                
+                <div class="weather-block" id="weatherBlock">
+                    <div class="weather-info">
+                        <div class="weather-temp" id="weatherTemp">--°C</div>
+                        <div class="weather-desc" id="weatherDesc">Loading weather...</div>
+                    </div>
+                    <div class="weather-icon-container">
+                        <i data-lucide="cloud-sun" class="weather-icon" id="weatherIcon"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- WHOOP Pills Card (60%) -->
+            <div class="whoop-pills-card glass-card">
+                <!-- Recovery -->
+                <div class="pill-item">
+                    <span class="pill-label">Recovery</span>
+                    <div class="pill-value-container">
+                        <span class="pill-val text-green" id="screenRecovery">--%</span>
+                        <i data-lucide="heart-pulse" class="pill-sub-icon text-green"></i>
+                    </div>
+                </div>
+
+                <!-- Sleep -->
+                <div class="pill-item">
+                    <span class="pill-label">Sleep</span>
+                    <div class="pill-value-container">
+                        <span class="pill-val text-blue" id="screenSleep">--%</span>
+                        <i data-lucide="moon" class="pill-sub-icon text-blue"></i>
+                    </div>
+                </div>
+
+                <!-- HRV -->
+                <div class="pill-item">
+                    <span class="pill-label">HRV</span>
+                    <div class="pill-value-container">
+                        <span class="pill-val text-pink" id="screenHRV">-- ms</span>
+                        <i data-lucide="activity" class="pill-sub-icon text-pink"></i>
+                    </div>
+                </div>
+
+                <!-- Resting HR -->
+                <div class="pill-item">
+                    <span class="pill-label">Resting HR</span>
+                    <div class="pill-value-container">
+                        <span class="pill-val text-orange" id="screenRHR">-- bpm</span>
+                        <i data-lucide="heart" class="pill-sub-icon text-orange"></i>
+                    </div>
                 </div>
             </div>
-        </header>
+        </div>
 
         <!-- MAIN LAYOUT GRID (3-Column Jarvis Style) -->
         <div class="main-grid">
@@ -58,53 +100,8 @@
                 </section>
             </div>
 
-            <!-- COLUMN 2: HEALTH & COMMUTE -->
+            <!-- COLUMN 2: COMMUTE & MUSIC -->
             <div class="grid-column">
-                <!-- WHOOP Health Metrics (Real DB) -->
-                <section class="module-card glass-card">
-                    <div class="module-header">
-                        <i data-lucide="activity" class="module-icon icon-pink"></i>
-                        <h2>WHOOP Metrics</h2>
-                    </div>
-                    <div class="metrics-grid">
-                        <!-- Recovery -->
-                        <div class="metric-item">
-                            <div class="metric-label">Recovery</div>
-                            <div class="metric-value-container">
-                                <span class="metric-val text-green" id="screenRecovery">--%</span>
-                                <i data-lucide="heart-pulse" class="metric-sub-icon text-green"></i>
-                            </div>
-                        </div>
-
-                        <!-- Sleep Performance -->
-                        <div class="metric-item">
-                            <div class="metric-label">Sleep Performance</div>
-                            <div class="metric-value-container">
-                                <span class="metric-val text-blue" id="screenSleep">--%</span>
-                                <i data-lucide="moon" class="metric-sub-icon text-blue"></i>
-                            </div>
-                        </div>
-
-                        <!-- HRV -->
-                        <div class="metric-item">
-                            <div class="metric-label">HRV (RMSSD)</div>
-                            <div class="metric-value-container">
-                                <span class="metric-val text-pink" id="screenHRV">-- ms</span>
-                                <i data-lucide="activity" class="metric-sub-icon text-pink"></i>
-                            </div>
-                        </div>
-
-                        <!-- Resting HR -->
-                        <div class="metric-item">
-                            <div class="metric-label">Resting HR</div>
-                            <div class="metric-value-container">
-                                <span class="metric-val text-orange" id="screenRHR">-- bpm</span>
-                                <i data-lucide="heart" class="metric-sub-icon text-orange"></i>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- Commute & Traffic (Mocked) -->
                 <section class="module-card glass-card">
                     <div class="module-header">
@@ -115,9 +112,25 @@
                         <!-- Populated by JS -->
                     </div>
                 </section>
+
+                <!-- Spotify "Now Playing" (Mocked) -->
+                <section class="module-card glass-card spotify-card">
+                    <div class="spotify-content">
+                        <div class="album-art-container">
+                            <i data-lucide="music" class="fallback-art-icon"></i>
+                        </div>
+                        <div class="track-info">
+                            <div class="track-name" id="spotifyTrack">After Hours</div>
+                            <div class="track-artist" id="spotifyArtist">The Weeknd</div>
+                            <div class="spotify-progress-bar">
+                                <div class="spotify-progress-fill" id="spotifyProgressFill" style="width: 48%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
 
-            <!-- COLUMN 3: HABITS, WATER & MUSIC -->
+            <!-- COLUMN 3: HABITS & WATER -->
             <div class="grid-column">
                 <!-- Daily Habits with Streaks (Real DB) -->
                 <section class="module-card glass-card">
@@ -193,22 +206,6 @@
                             <button class="water-btn btn-reset" onclick="resetWater()">
                                 <i data-lucide="rotate-ccw" class="btn-reset-icon"></i>
                             </button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Spotify "Now Playing" (Mocked) -->
-                <section class="module-card glass-card spotify-card">
-                    <div class="spotify-content">
-                        <div class="album-art-container">
-                            <i data-lucide="music" class="fallback-art-icon"></i>
-                        </div>
-                        <div class="track-info">
-                            <div class="track-name" id="spotifyTrack">After Hours</div>
-                            <div class="track-artist" id="spotifyArtist">The Weeknd</div>
-                            <div class="spotify-progress-bar">
-                                <div class="spotify-progress-fill" id="spotifyProgressFill" style="width: 48%;"></div>
-                            </div>
                         </div>
                     </div>
                 </section>
