@@ -138,26 +138,33 @@ function loadMockLinearPriorities() {
     `).join('');
 }
 
-// 5. MOCKED COMMUTES & TRAFFIC (Rionegro)
-function loadMockCommuteTraffic() {
-    const commutes = [
-        { name: 'Mall Indiana', desc: 'Via Las Palmas', time: '24 min', status: 'optimal', color: 'text-green' },
-        { name: 'Reserva del Sur', desc: 'Local Route', time: '18 min', status: 'minor delays', color: 'text-orange' },
-        { name: 'Mall Llanogrande', desc: 'Via Llanogrande', time: '11 min', status: 'smooth', color: 'text-green' }
-    ];
-    
-    commuteList.innerHTML = commutes.map(c => `
-        <div class="commute-item">
-            <div class="commute-loc">
-                <span class="commute-name">${c.name}</span>
-                <span class="commute-desc">${c.desc}</span>
+// 5. REAL COMMUTES & TRAFFIC (Rionegro)
+async function fetchCommutes() {
+    try {
+        const response = await fetch('/api/commutes');
+        if (!response.ok) throw new Error('Commutes fetch failed');
+        const commutes = await response.json();
+        
+        commuteList.innerHTML = commutes.map(c => `
+            <div class="commute-item">
+                <div class="commute-loc">
+                    <span class="commute-name">${c.name}</span>
+                    <span class="commute-desc">${c.desc}</span>
+                </div>
+                <div class="commute-status">
+                    <span class="commute-time">${c.time}</span>
+                    <span class="commute-indicator ${c.color}">${c.status}</span>
+                </div>
             </div>
-            <div class="commute-status">
-                <span class="commute-time">${c.time}</span>
-                <span class="commute-indicator ${c.color}">${c.status}</span>
+        `).join('');
+    } catch (err) {
+        console.error('Error fetching commutes:', err);
+        commuteList.innerHTML = `
+            <div class="commute-item" style="justify-content: center; padding-block: 20px;">
+                <span class="commute-desc" style="color: #ff1744">Failed to load commutes</span>
             </div>
-        </div>
-    `).join('');
+        `;
+    }
 }
 
 // 6. WHOOP METRICS (Latest from DB)
@@ -416,7 +423,7 @@ setInterval(updateTime, 1000);
 
 fetchCalendarEvents();
 loadMockLinearPriorities();
-loadMockCommuteTraffic();
+fetchCommutes();
 fetchWeather();
 fetchWhoopMetrics();
 fetchHabits();
@@ -426,6 +433,7 @@ runSpotifyMockProgress();
 // Refresh live endpoints every 10 minutes
 setInterval(() => {
     fetchCalendarEvents();
+    fetchCommutes();
     fetchWeather();
     fetchWhoopMetrics();
     fetchHabits();

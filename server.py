@@ -334,6 +334,99 @@ def get_calendar_endpoint():
     events = fetch_calendar_events()
     return jsonify(events)
 
+@app.route('/api/commutes', methods=['GET'])
+def get_commutes():
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    
+    # Fallback to mock data if API key is not configured
+    if not api_key:
+        print("[*] GOOGLE_MAPS_API_KEY not configured. Returning mock commutes.")
+        return jsonify([
+            { "name": "Mall Indiana", "desc": "Via Las Palmas", "time": "24 min", "status": "optimal", "color": "text-green" },
+            { "name": "Reserva del Sur", "desc": "Local Route", "time": "18 min", "status": "minor delays", "color": "text-orange" },
+            { "name": "Mall Llanogrande", "desc": "Via Llanogrande", "time": "11 min", "status": "smooth", "color": "text-green" }
+        ])
+        
+    try:
+        import requests
+        origin = "Rionegro, Antioquia, Colombia"
+        destinations = [
+            "Mall Indiana, Envigado, Antioquia, Colombia",
+            "Reserva del Sur, Rionegro, Antioquia, Colombia",
+            "Mall Llanogrande, Rionegro, Antioquia, Colombia"
+        ]
+        dest_names = ["Mall Indiana", "Reserva del Sur", "Mall Llanogrande"]
+        dest_descs = ["Via Las Palmas", "Local Route", "Via Llanogrande"]
+        
+        dest_str = "|".join(destinations)
+        url = "https://maps.googleapis.com/maps/api/distancematrix/json"
+        params = {
+            "origins": origin,
+            "destinations": dest_str,
+            "departure_time": "now",
+            "key": api_key
+        }
+        
+        resp = requests.get(url, params=params, timeout=5)
+        if resp.status_code != 200:
+            raise Exception(f"Google Maps API error: {resp.status_code}")
+            
+        data = resp.json()
+        if data.get("status") != "OK":
+            raise Exception(f"Google Maps API status: {data.get('status')}")
+            
+        # Parse results
+        results = []
+        rows = data.get("rows", [])
+        if not rows:
+            raise Exception("No rows returned from Google Distance Matrix")
+            
+        elements = rows[0].get("elements", [])
+        for i, elem in enumerate(elements):
+            if elem.get("status") != "OK":
+                results.append({
+                    "name": dest_names[i],
+                    "desc": dest_descs[i],
+                    "time": "-- min",
+                    "status": "unavailable",
+                    "color": "text-orange"
+                })
+                continue
+                
+            duration_data = elem.get("duration_in_traffic") or elem.get("duration")
+            standard_duration = elem.get("duration", {}).get("value", 1)
+            traffic_duration = duration_data.get("value", 1)
+            
+            time_text = duration_data.get("text", "").replace("mins", "min").replace("min", "min")
+            
+            ratio = traffic_duration / standard_duration
+            if ratio <= 1.1:
+                status = "optimal"
+                color = "text-green"
+            elif ratio <= 1.3:
+                status = "minor delays"
+                color = "text-orange"
+            else:
+                status = "heavy traffic"
+                color = "text-pink"
+                
+            results.append({
+                "name": dest_names[i],
+                "desc": dest_descs[i],
+                "time": time_text,
+                "status": status,
+                "color": color
+            })
+            
+        return jsonify(results)
+    except Exception as e:
+        print(f"[-] Error fetching Google Maps Distance Matrix: {e}")
+        return jsonify([
+            { "name": "Mall Indiana (Fallback)", "desc": "Via Las Palmas", "time": "24 min", "status": "optimal", "color": "text-green" },
+            { "name": "Reserva del Sur (Fallback)", "desc": "Local Route", "time": "18 min", "status": "minor delays", "color": "text-orange" },
+            { "name": "Mall Llanogrande (Fallback)", "desc": "Via Llanogrande", "time": "11 min", "status": "smooth", "color": "text-green" }
+        ])
+
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):
