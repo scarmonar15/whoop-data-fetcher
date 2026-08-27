@@ -87,20 +87,36 @@ function mapWeatherCode(code) {
     return mapping[code] || { desc: 'Cloudy', icon: 'cloud' };
 }
 
-// 3. MOCKED AGENDA (Calendar)
-function loadMockAgenda() {
-    const events = [
-        { time: '09:00 AM', title: 'Daily Sync & Standup' },
-        { time: '11:30 AM', title: 'Product Architecture Review' },
-        { time: '03:00 PM', title: 'Design System & UI Alignment' }
-    ];
-    
-    agendaList.innerHTML = events.map(e => `
-        <div class="agenda-item">
-            <div class="agenda-time">${e.time}</div>
-            <div class="agenda-title">${e.title}</div>
-        </div>
-    `).join('');
+// 3. REAL AGENDA (Calendar)
+async function fetchCalendarEvents() {
+    try {
+        const response = await fetch('/api/calendar');
+        if (!response.ok) throw new Error('Calendar fetch failed');
+        const events = await response.json();
+        
+        if (events.length === 0) {
+            agendaList.innerHTML = `
+                <div class="agenda-item" style="justify-content: center; padding-block: 20px;">
+                    <div class="agenda-title" style="color: var(--text-secondary)">No events scheduled for today</div>
+                </div>
+            `;
+            return;
+        }
+        
+        agendaList.innerHTML = events.map(e => `
+            <div class="agenda-item">
+                <div class="agenda-time">${e.time_str}</div>
+                <div class="agenda-title">${e.title}</div>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error('Error fetching calendar events:', err);
+        agendaList.innerHTML = `
+            <div class="agenda-item" style="justify-content: center; padding-block: 20px;">
+                <div class="agenda-title" style="color: #ff1744">Failed to load calendar events</div>
+            </div>
+        `;
+    }
 }
 
 // 4. MOCKED LINEAR PRIORITIES
@@ -367,7 +383,7 @@ function showToast(message, isError = false) {
 updateTime();
 setInterval(updateTime, 1000);
 
-loadMockAgenda();
+fetchCalendarEvents();
 loadMockLinearPriorities();
 loadMockCommuteTraffic();
 fetchWeather();
@@ -378,6 +394,7 @@ runSpotifyMockProgress();
 
 // Refresh live endpoints every 10 minutes
 setInterval(() => {
+    fetchCalendarEvents();
     fetchWeather();
     fetchWhoopMetrics();
     fetchHabits();

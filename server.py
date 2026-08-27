@@ -253,6 +253,79 @@ def get_habits_history_endpoint():
     history = db.get_habit_history(date_str, days)
     return jsonify(history)
 
+def fetch_calendar_events():
+    url = os.getenv("GOOGLE_CALENDAR_URL")
+    if not url:
+        print("[*] GOOGLE_CALENDAR_URL not configured. Returning empty agenda.")
+        return []
+    
+    try:
+        import requests
+        from icalendar import Calendar
+        from datetime import datetime, date
+        import pytz
+        
+        resp = requests.get(url, timeout=5)
+        if resp.status_code != 200:
+            print(f"[-] Failed to fetch iCal feed: {resp.status_code}")
+            return []
+            
+        cal = Calendar.from_ical(resp.content)
+        
+        local_tz = pytz.timezone("America/Bogota")
+        now_local = datetime.now(local_tz)
+        today_start = local_tz.localize(datetime(now_local.year, now_local.month, now_local.day, 0, 0, 0))
+        today_end = local_tz.localize(datetime(now_local.year, now_local.month, now_local.day, 23, 59, 59))
+        
+        events = []
+        for component in cal.walk('vevent'):
+            if component.name != "VEVENT":
+                continue
+                
+            dtstart = component.get('dtstart')
+            dtend = component.get('dtend')
+            summary = component.get('summary')
+            
+            if not dtstart or not summary:
+                continue
+                
+            start_val = dtstart.dt
+            end_val = dtend.dt if dtend else start_val
+            
+            is_all_day = False
+            if isinstance(start_val, date) and not isinstance(start_val, datetime):
+                is_all_day = True
+                start_dt = local_tz.localize(datetime(start_val.year, start_val.month, start_val.day, 0, 0, 0))
+                end_dt = local_tz.localize(datetime(end_val.year, end_val.month, end_val.day, 23, 59, 59))
+            else:
+                if start_val.tzinfo is None:
+                    start_dt = pytz.utc.localize(start_val).astimezone(local_tz)
+                    end_dt = pytz.utc.localize(end_val).astimezone(local_tz)
+                else:
+                    start_dt = start_val.astimezone(local_tz)
+                    end_dt = end_val.astimezone(local_tz)
+                    
+            if (start_dt <= today_end and end_dt >= today_start):
+                time_str = "All Day" if is_all_day else start_dt.strftime("%I:%M %p")
+                events.append({
+                    "start_time": start_dt.isoformat(),
+                    "end_time": end_dt.isoformat(),
+                    "time_str": time_str,
+                    "title": str(summary),
+                    "is_all_day": is_all_day
+                })
+                
+        events.sort(key=lambda e: e["start_time"])
+        return events
+    except Exception as e:
+        print(f"[-] Error fetching or parsing iCal feed: {e}")
+        return []
+
+@app.route('/api/calendar', methods=['GET'])
+def get_calendar_endpoint():
+    events = fetch_calendar_events()
+    return jsonify(events)
+
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):
