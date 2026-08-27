@@ -457,8 +457,7 @@ def get_linear_priorities():
           viewer {
             assignedIssues(
               filter: { state: { type: { nin: ["completed", "canceled"] } } }
-              orderBy: priority
-              first: 3
+              first: 50
             ) {
               nodes {
                 identifier
@@ -484,6 +483,19 @@ def get_linear_priorities():
             
         nodes = viewer.get("assignedIssues", {}).get("nodes", [])
         
+        # Sort nodes in Python: prioritize lower numbers (1=urgent, 2=high, 3=medium, 4=low). 
+        # Treat 0 (none) as 5 so it goes to the bottom.
+        sorted_nodes = sorted(
+            nodes,
+            key=lambda x: (
+                x.get("priority") if x.get("priority", 0) > 0 else 5,
+                x.get("identifier", "")
+            )
+        )
+        
+        # Take the top 3
+        top_nodes = sorted_nodes[:3]
+        
         # Priority mapping: 1 -> urgent, 2 -> high, 3 -> medium, 4/0 -> low
         priority_map = {
             1: "urgent",
@@ -494,7 +506,7 @@ def get_linear_priorities():
         }
         
         priorities = []
-        for node in nodes:
+        for node in top_nodes:
             priority_val = node.get("priority", 0)
             priority_label = priority_map.get(priority_val, "low")
             
