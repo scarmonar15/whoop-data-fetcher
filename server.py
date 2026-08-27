@@ -431,6 +431,88 @@ def get_commutes():
             { "name": "Mall Llanogrande (Fallback)", "desc": "Via Llanogrande", "time": "11 min", "status": "smooth", "color": "text-green" }
         ])
 
+@app.route('/api/linear', methods=['GET'])
+def get_linear_priorities():
+    api_key = os.getenv("LINEAR_API_KEY")
+    
+    # Fallback to mock data if API key is not configured
+    if not api_key:
+        print("[*] LINEAR_API_KEY not configured. Returning mock priorities.")
+        return jsonify([
+            { "key": "WHOOP-104", "title": "Configure persistent SQLite storage for dashboard analytics", "priority": "high" },
+            { "key": "WHOOP-108", "title": "Optimize public metrics API endpoint averages calculation", "priority": "medium" },
+            { "key": "WHOOP-111", "title": "Implement daily automated sync background job", "priority": "high" }
+        ])
+        
+    try:
+        import requests
+        url = "https://api.linear.app/graphql"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": api_key
+        }
+        
+        query = """
+        query {
+          viewer {
+            assignedIssues(
+              filter: { state: { type: { nin: ["completed", "canceled"] } } }
+              orderBy: priority
+              first: 3
+            ) {
+              nodes {
+                identifier
+                title
+                priority
+              }
+            }
+          }
+        }
+        """
+        
+        resp = requests.post(url, json={"query": query}, headers=headers, timeout=5)
+        if resp.status_code != 200:
+            raise Exception(f"Linear API error: {resp.status_code}")
+            
+        result_data = resp.json()
+        if "errors" in result_data:
+            raise Exception(f"Linear GraphQL errors: {result_data['errors']}")
+            
+        viewer = result_data.get("data", {}).get("viewer")
+        if not viewer:
+            raise Exception("No viewer returned (is your LINEAR_API_KEY valid?)")
+            
+        nodes = viewer.get("assignedIssues", {}).get("nodes", [])
+        
+        # Priority mapping: 1 -> urgent, 2 -> high, 3 -> medium, 4/0 -> low
+        priority_map = {
+            1: "urgent",
+            2: "high",
+            3: "medium",
+            4: "low",
+            0: "low"
+        }
+        
+        priorities = []
+        for node in nodes:
+            priority_val = node.get("priority", 0)
+            priority_label = priority_map.get(priority_val, "low")
+            
+            priorities.append({
+                "key": node.get("identifier"),
+                "title": node.get("title"),
+                "priority": priority_label
+            })
+            
+        return jsonify(priorities)
+    except Exception as e:
+        print(f"[-] Error fetching Linear priorities: {e}")
+        return jsonify([
+            { "key": "WHOOP-104 (Fallback)", "title": "Configure persistent SQLite storage for dashboard analytics", "priority": "high" },
+            { "key": "WHOOP-108 (Fallback)", "title": "Optimize public metrics API endpoint averages calculation", "priority": "medium" },
+            { "key": "WHOOP-111 (Fallback)", "title": "Implement daily automated sync background job", "priority": "high" }
+        ])
+
 def require_api_key(f):
     @wraps(f)
     def decorated(*args, **kwargs):

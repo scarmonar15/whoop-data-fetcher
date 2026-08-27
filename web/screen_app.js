@@ -119,23 +119,39 @@ async function fetchCalendarEvents() {
     }
 }
 
-// 4. MOCKED LINEAR PRIORITIES
-function loadMockLinearPriorities() {
-    const priorities = [
-        { key: 'WHOOP-104', title: 'Configure persistent SQLite storage for dashboard analytics', priority: 'high' },
-        { key: 'WHOOP-108', title: 'Optimize public metrics API endpoint averages calculation', priority: 'medium' },
-        { key: 'WHOOP-111', title: 'Implement daily automated sync background job', priority: 'high' }
-    ];
-    
-    prioritiesList.innerHTML = priorities.map(p => `
-        <div class="priority-item">
-            <div class="priority-meta">
-                <span class="priority-key">${p.key}</span>
-                <span class="priority-level">${p.priority}</span>
+// 4. REAL LINEAR PRIORITIES
+async function fetchLinearPriorities() {
+    try {
+        const response = await fetch('/api/linear');
+        if (!response.ok) throw new Error('Linear fetch failed');
+        const priorities = await response.json();
+        
+        if (priorities.length === 0) {
+            prioritiesList.innerHTML = `
+                <div class="priority-item" style="justify-content: center; padding-block: 20px;">
+                    <span class="priority-title" style="color: var(--text-secondary)">No active priorities assigned</span>
+                </div>
+            `;
+            return;
+        }
+        
+        prioritiesList.innerHTML = priorities.map(p => `
+            <div class="priority-item">
+                <div class="priority-meta">
+                    <span class="priority-key">${p.key}</span>
+                    <span class="priority-level">${p.priority}</span>
+                </div>
+                <div class="priority-title">${p.title}</div>
             </div>
-            <div class="priority-title">${p.title}</div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (err) {
+        console.error('Error fetching Linear priorities:', err);
+        prioritiesList.innerHTML = `
+            <div class="priority-item" style="justify-content: center; padding-block: 20px;">
+                <span class="priority-title" style="color: #ff1744">Failed to load Linear priorities</span>
+            </div>
+        `;
+    }
 }
 
 // 5. REAL COMMUTES & TRAFFIC (Rionegro)
@@ -422,7 +438,7 @@ updateTime();
 setInterval(updateTime, 1000);
 
 fetchCalendarEvents();
-loadMockLinearPriorities();
+fetchLinearPriorities();
 fetchCommutes();
 fetchWeather();
 fetchWhoopMetrics();
@@ -433,6 +449,7 @@ runSpotifyMockProgress();
 // Refresh live endpoints every 10 minutes
 setInterval(() => {
     fetchCalendarEvents();
+    fetchLinearPriorities();
     fetchCommutes();
     fetchWeather();
     fetchWhoopMetrics();
