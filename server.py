@@ -349,7 +349,7 @@ def get_commutes():
         
     try:
         import requests
-        origin = "Rionegro, Antioquia, Colombia"
+        origin = os.getenv("COMMUTE_ORIGIN", "6.1552,-75.3738")
         destinations = [
             "Mall Indiana, Envigado, Antioquia, Colombia",
             "Reserva del Sur, Rionegro, Antioquia, Colombia",
