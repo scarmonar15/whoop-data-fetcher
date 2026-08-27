@@ -394,12 +394,16 @@ def get_commutes():
                 continue
                 
             duration_data = elem.get("duration_in_traffic") or elem.get("duration")
-            standard_duration = elem.get("duration", {}).get("value", 1)
-            traffic_duration = duration_data.get("value", 1)
+            standard_duration = elem.get("duration", {}).get("value", 0)
+            traffic_duration = duration_data.get("value", 0)
             
             time_text = duration_data.get("text", "").replace("mins", "min").replace("min", "min")
             
-            ratio = traffic_duration / standard_duration
+            if standard_duration <= 0:
+                ratio = 1.0
+            else:
+                ratio = traffic_duration / standard_duration
+                
             if ratio <= 1.1:
                 status = "optimal"
                 color = "text-green"
