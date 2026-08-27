@@ -456,7 +456,7 @@ def get_linear_priorities():
         query {
           viewer {
             assignedIssues(
-              filter: { state: { type: { nin: ["completed", "canceled"] } } }
+              filter: { state: { type: { in: ["unstarted", "started"] } } }
               first: 50
             ) {
               nodes {
